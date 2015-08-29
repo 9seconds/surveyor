@@ -1,0 +1,4 @@
+# Package requirements for Surveyor
+
+openpyxl>=2.2,<2.3
+pyyaml

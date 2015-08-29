@@ -1,0 +1,5 @@
+# Requirements for surveyor
+
+-r requirements/package.txt
+-r requirements/qa.txt
+-r requirements/extra.txt

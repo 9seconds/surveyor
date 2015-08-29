@@ -1,0 +1,7 @@
+# QA requirements for Surveyor
+
+pytest>=2.6
+pytest-cov
+tox>=1.7
+pylint
+flake8
