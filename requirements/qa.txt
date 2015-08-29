@@ -5,3 +5,4 @@ pytest-cov
 tox>=1.7
 pylint
 flake8
+flake8-debugger

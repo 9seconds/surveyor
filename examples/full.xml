@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workbook classes="surveyor.classes.simple">
+    <sheet autosize="true" name="Worksheet1">
+        <table startrow="1" startcolumn="1" class="TableSimple">
+            <tr class="RowHeader">
+                <td class="HeaderSimple">Name</td>
+                <td colspan="2">VMType price</td>
+                <td colspan="2">VMType margin</td>
+            </tr>
+            <tr rowspan="2">
+                <td class="CellNumber">10</td>
+                <td class="CellNumber">20</td>
+                <td class="CellNumber">30</td>
+            </tr>
+        </table>
+        <table startcell="C10">
+            <tr class="RowHeader">
+                <td class="HeaderSimple">Name</td>
+                <td colspan="2">VMType price</td>
+                <td colspan="2">VMType margin</td>
+            </tr>
+            <tr rowspan="2">
+                <td class="CellNumber">10</td>
+                <td class="CellNumber">20</td>
+                <td class="CellNumber">30</td>
+            </tr>
+            <tr rowspan="2">
+                <td class="CellNumber">40</td>
+                <td class="CellNumber">50</td>
+                <td class="CellNumber">60</td>
+            </tr>
+            <tr rowspan="2">
+                <td class="CellNumber">70</td>
+                <td class="CellNumber">80</td>
+                <td class="CellNumber">90</td>
+            </tr>
+            <tr rowspan="2">
+                <td class="CellNumber">100</td>
+                <td class="CellNumber">110</td>
+                <td class="CellNumber">120.23001</td>
+            </tr>
+        </table>
+    </sheet>
+    <sheet>
+    </sheet>
+</workbook>
