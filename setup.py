@@ -47,6 +47,9 @@ setuptools.setup(
     maintainer="Sergey Arkhipov",
     maintainer_email="serge@aerialsounds.org",
     url="https://github.com/9seconds/surveyor/",
+    entry_points={
+        'console_scripts': ['surveyor=surveyor:main'],
+    },
     install_requires=[
         "openpyxl>=2.2,<2.3",
         "six"
