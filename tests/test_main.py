@@ -12,7 +12,10 @@ import magic
 import surveyor
 
 
-XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+XLSX_MIME_TYPES = (
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.ms-excel"
+)
 """MIME type for XLSX."""
 
 
