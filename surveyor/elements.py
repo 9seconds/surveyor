@@ -113,7 +113,7 @@ class Sheet(BaseElement):
     DEFAULT_WIDTH = 10
     WIDTH_ADDITION = 1
 
-    DEFAULT_STYLER = surveyor.classes._base.Sheet
+    DEFAULT_STYLER = surveyor.classes.simple.Sheet
 
     @staticmethod
     def apply_autosize(sheet, default_width=DEFAULT_WIDTH, width_addition=WIDTH_ADDITION):
