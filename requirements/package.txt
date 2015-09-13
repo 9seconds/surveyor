@@ -2,3 +2,4 @@
 
 openpyxl>=2.2,<2.3
 lxml
+six

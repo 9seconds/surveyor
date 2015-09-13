@@ -124,7 +124,7 @@ class Sheet(BaseElement):
                 value = sheet.cell(row=row, column=col).value
                 if value:
                     if not isinstance(value, six.string_types):
-                        value = str(value)
+                        value = six.text_type(value)
                     # Skip formulas
                     if value.startswith("="):
                         continue

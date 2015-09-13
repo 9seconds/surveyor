@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
+
+import six
 
 
 def strtobool(val):
     if not val:
         return False
 
-    strval = str(val).strip().lower()
+    strval = six.text_type(val).strip().lower()
     if strval in ("1", "y", "yes", "true", "on"):
         return True
     if strval in ("0", "n", "no", "false", "off"):
@@ -18,7 +20,7 @@ def strtobool(val):
 
 
 def guess_text(text):
-    text = text.strip()
+    text = six.text_type(text).strip()
 
     try:
         return int(text)
