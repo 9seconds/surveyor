@@ -11,6 +11,7 @@ import openpyxl
 import openpyxl.utils
 import six
 
+import surveyor.classes.simple
 import surveyor.exceptions
 import surveyor.utils
 
@@ -25,6 +26,8 @@ DEFAULT_CLASSES_MODULE = "surveyor.classes.simple"
 class BaseElement(object):
 
     TAG_NAME = None
+
+    DEFAULT_STYLER = None
 
     @property
     def classes(self):
@@ -48,10 +51,13 @@ class BaseElement(object):
     def process(self, element=None):
         raise NotImplementedError("You have to implement this method before invoke it.")
 
-    def get_class(self, name):
-        class_obj = getattr(self.classes, name, None)
+    def get_class(self):
+        if self.klass is None:
+            return self.DEFAULT_STYLER
+
+        class_obj = getattr(self.classes, self.klass, None)
         if class_obj is None:
-            raise surveyor.exceptions.CannotFindElementClass(self.classes, name)
+            raise surveyor.exceptions.CannotFindElementClass(self.classes, self.klass)
 
         return class_obj
 
@@ -106,6 +112,8 @@ class Sheet(BaseElement):
     DEFAULT_WIDTH = 10
     WIDTH_ADDITION = 1
 
+    DEFAULT_STYLER = surveyor.classes.simple.Sheet
+
     def __init__(self, element):
         super(Sheet, self).__init__(element)
 
@@ -118,6 +126,9 @@ class Sheet(BaseElement):
 
         if self.autosize:
             self.apply_autosize(element)
+
+        styler = self.get_class()(element)
+        styler.stylize()
 
     def apply_autosize(self, sheet, default_width=DEFAULT_WIDTH, width_addition=WIDTH_ADDITION):
         column_width = collections.defaultdict(lambda: default_width)
@@ -150,6 +161,8 @@ class Table(BaseElement):
 
     DEFAULT_START_CELL = "A1"
 
+    DEFAULT_STYLER = surveyor.classes.simple.Table
+
     @classmethod
     def get_start_cell(cls, attrs):
         start_row = attrs[cls.ATTR_START_ROW]
@@ -178,6 +191,9 @@ class Table(BaseElement):
         for row, row_idx in zip(self.children, range(top_row, bottom_row)):
             row.process(element, row_idx, left_column, right_column)
 
+        styler = self.get_class()(element, top_row, bottom_row, left_column, right_column)
+        styler.stylize()
+
     def get_dimensions(self):
         left_column, top_row = openpyxl.utils.coordinate_from_string(self.start_cell)
         left_column = openpyxl.utils.column_index_from_string(left_column)
@@ -194,14 +210,21 @@ class Row(BaseElement):
 
     ATTR_CLASS = "class"
 
+    DEFAULT_STYLER = surveyor.classes.simple.Row
+
     def __init__(self, element):
         super(Row, self).__init__(element)
 
         self.klass = element.attrib.get(self.ATTR_CLASS)
 
     def process(self, element=None, row_idx=1, left_column=1, right_column=1):
+        cells = []
         for col_idx, cell in enumerate(self.children, start=left_column):
             cell.process(element, row_idx, col_idx)
+            cells.append(cells)
+
+        styler = self.get_class()(cells)
+        styler.stylize()
 
 
 class Cell(BaseElement):
@@ -209,6 +232,8 @@ class Cell(BaseElement):
     TAG_NAME = "td"
 
     ATTR_CLASS = "class"
+
+    DEFAULT_STYLER = surveyor.classes.simple.Cell
 
     def __init__(self, element):
         super(Cell, self).__init__(element)
@@ -219,3 +244,6 @@ class Cell(BaseElement):
     def process(self, element=None, row_idx=1, col_idx=1):
         cell = element.cell(row=row_idx, column=col_idx)
         cell.value = self.value
+
+        styler = self.get_class()(cell)
+        styler.stylize()
