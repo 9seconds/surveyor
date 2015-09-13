@@ -2,42 +2,42 @@
 <workbook classes="surveyor.classes.simple">
     <sheet autosize="true" name="Worksheet1">
         <table startrow="1" startcolumn="1" >
-            <tr >
-                <td >Name</td>
+            <tr>
+                <td>Name</td>
                 <td colspan="2">VMType price</td>
                 <td colspan="2">VMType margin</td>
             </tr>
             <tr rowspan="2">
-                <td >10</td>
-                <td >20</td>
-                <td >30</td>
+                <td>10</td>
+                <td>20</td>
+                <td>30</td>
             </tr>
         </table>
         <table startcell="C10">
-            <tr >
-                <td >Name</td>
+            <tr>
+                <td>Name</td>
                 <td colspan="2">VMType price</td>
                 <td colspan="2">VMType margin</td>
             </tr>
             <tr rowspan="2">
-                <td >10</td>
-                <td >20</td>
-                <td >30</td>
+                <td>10</td>
+                <td>20</td>
+                <td>30</td>
             </tr>
             <tr rowspan="2">
-                <td >40</td>
-                <td >50</td>
-                <td >60</td>
+                <td>40</td>
+                <td>50</td>
+                <td>60</td>
             </tr>
             <tr rowspan="2">
-                <td >70</td>
-                <td >80</td>
-                <td >90</td>
+                <td>70</td>
+                <td>80</td>
+                <td>90</td>
             </tr>
             <tr rowspan="2">
-                <td >100</td>
-                <td >110</td>
-                <td >120.23001</td>
+                <td>100</td>
+                <td>110</td>
+                <td>120.23001</td>
             </tr>
         </table>
     </sheet>
