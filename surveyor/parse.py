@@ -13,6 +13,8 @@ except ImportError:
         # noinspection PyPep8Naming
         import xml.etree.ElementTree as etree
 
+import six
+
 import surveyor.elements
 import surveyor.exceptions
 
@@ -23,6 +25,9 @@ def parse_filename(filename):
 
 
 def parse_fileobj(content):
+    if isinstance(content, six.string_types):
+        content = six.StringIO(content)
+
     root = etree.parse(content)
     root = root.getroot()
     parsed = parse_xml(root)

@@ -66,5 +66,5 @@ def test_strtobool_unknown(value):
     ("2 text", "2 text"),
     ("1.0 text", "1.0 text")
 ))
-def test_guess_text_int(value, result):
+def test_guess_text(value, result):
     assert utils.guess_text(value) == result

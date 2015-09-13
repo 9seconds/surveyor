@@ -20,6 +20,9 @@ def strtobool(val):
 
 
 def guess_text(text):
+    if text is None:
+        return ""
+
     text = six.text_type(text).strip()
 
     try:

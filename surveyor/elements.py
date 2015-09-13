@@ -5,6 +5,7 @@ from __future__ import unicode_literals, absolute_import
 
 import abc
 import collections
+import sys
 
 import openpyxl
 import openpyxl.utils
@@ -81,6 +82,8 @@ class WorkBook(BaseElement):
             self.class_module = __import__(module_name)
         except Exception as exc:
             raise surveyor.exceptions.CannotImportClassError(module_name, exc)
+        else:
+            self.class_module = sys.modules[module_name]
 
     def add(self, element):
         super(WorkBook, self).add(element)
@@ -108,6 +111,7 @@ class Sheet(BaseElement):
 
     ATTR_AUTOSIZE = "autosize"
     ATTR_NAME = "name"
+    ATTR_CLASS = "class"
 
     DEFAULT_WIDTH = 10
     WIDTH_ADDITION = 1
@@ -138,6 +142,7 @@ class Sheet(BaseElement):
         super(Sheet, self).__init__(element)
 
         self.autosize = surveyor.utils.strtobool(element.attrib.get(self.ATTR_AUTOSIZE))
+        self.klass = element.attrib.get(self.ATTR_CLASS)
         self.name = element.attrib.get(self.ATTR_NAME)
 
     def process(self, element=None):
