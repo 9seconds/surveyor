@@ -13,6 +13,7 @@ with open("README.rst", "r") as resource:
 
 
 # copypasted from http://pytest.org/latest/goodpractises.html
+# noinspection PyAttributeOutsideInit
 class PyTest(setuptools.command.test.test):
     user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
 

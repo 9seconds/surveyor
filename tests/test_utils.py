@@ -6,6 +6,7 @@ import pytest
 import surveyor.utils as utils
 
 
+# noinspection PyUnresolvedReferences
 @pytest.mark.parametrize("value", (
     "1",
     "y",
@@ -22,6 +23,7 @@ def test_strtobool_true(value):
     assert utils.strtobool(value)
 
 
+# noinspection PyUnresolvedReferences
 @pytest.mark.parametrize("value", (
     "0",
     "n",
@@ -39,6 +41,7 @@ def test_strtobool_false(value):
     assert not utils.strtobool(value)
 
 
+# noinspection PyUnresolvedReferences
 @pytest.mark.parametrize("value", (
     [1],
     {1: 1},
@@ -48,6 +51,7 @@ def test_strtobool_unknown(value):
         utils.strtobool(value)
 
 
+# noinspection PyUnresolvedReferences
 @pytest.mark.parametrize("value, result", (
     ("1", 1),
     ("-1", -1),

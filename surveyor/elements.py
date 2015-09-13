@@ -15,6 +15,7 @@ import surveyor.classes.simple
 import surveyor.exceptions
 import surveyor.utils
 
+# noinspection PyUnresolvedReferences
 from six.moves import range, zip
 
 
@@ -112,25 +113,10 @@ class Sheet(BaseElement):
     DEFAULT_WIDTH = 10
     WIDTH_ADDITION = 1
 
-    DEFAULT_STYLER = surveyor.classes.simple.Sheet
+    DEFAULT_STYLER = surveyor.classes._base.Sheet
 
-    def __init__(self, element):
-        super(Sheet, self).__init__(element)
-
-        self.autosize = surveyor.utils.strtobool(element.attrib.get(self.ATTR_AUTOSIZE))
-        self.name = element.attrib.get(self.ATTR_NAME)
-
-    def process(self, element=None):
-        for table in self.children:
-            table.process(element)
-
-        if self.autosize:
-            self.apply_autosize(element)
-
-        styler = self.get_class()(element)
-        styler.stylize()
-
-    def apply_autosize(self, sheet, default_width=DEFAULT_WIDTH, width_addition=WIDTH_ADDITION):
+    @staticmethod
+    def apply_autosize(sheet, default_width=DEFAULT_WIDTH, width_addition=WIDTH_ADDITION):
         column_width = collections.defaultdict(lambda: default_width)
 
         for row in range(1, sheet.max_row):
@@ -148,6 +134,22 @@ class Sheet(BaseElement):
             column = sheet.column_dimensions[openpyxl.utils.get_column_letter(col)]
             column.auto_size = True
             column.width = column_width[col] + width_addition
+
+    def __init__(self, element):
+        super(Sheet, self).__init__(element)
+
+        self.autosize = surveyor.utils.strtobool(element.attrib.get(self.ATTR_AUTOSIZE))
+        self.name = element.attrib.get(self.ATTR_NAME)
+
+    def process(self, element=None):
+        for table in self.children:
+            table.process(element)
+
+        if self.autosize:
+            self.apply_autosize(element)
+
+        styler = self.get_class()(element)
+        styler.stylize()
 
 
 class Table(BaseElement):

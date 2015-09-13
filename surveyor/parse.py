@@ -7,8 +7,10 @@ try:
     import lxml.etree as etree
 except ImportError:
     try:
+        # noinspection PyPep8Naming
         import xml.etree.cElementTree as etree
     except ImportError:
+        # noinspection PyPep8Naming
         import xml.etree.ElementTree as etree
 
 import surveyor.elements
