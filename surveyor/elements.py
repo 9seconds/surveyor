@@ -125,18 +125,23 @@ class Sheet(BaseElement):
         for row in range(1, sheet.max_row):
             for col in range(1, sheet.max_column + 1):
                 value = sheet.cell(row=row, column=col).value
-                if value:
-                    if not isinstance(value, six.string_types):
-                        value = six.text_type(value)
-                    # Skip formulas
-                    if value.startswith("="):
-                        continue
-                    column_width[col] = max(column_width[col], len(value))
+                if not value:
+                    continue
+                if not isinstance(value, six.string_types):
+                    value = six.text_type(value)
+                if value.startswith("="):  # Skip formulas
+                    continue
+
+                column_width[col] = max(column_width[col], len(value))
 
         for col in range(1, sheet.max_column + 1):
-            column = sheet.column_dimensions[openpyxl.utils.get_column_letter(col)]
-            column.auto_size = True
-            column.width = column_width[col] + width_addition
+            try:
+                column = sheet.column_dimensions[openpyxl.utils.get_column_letter(col)]
+            except KeyError:
+                pass
+            else:
+                column.auto_size = True
+                column.width = column_width[col] + width_addition
 
     def __init__(self, element):
         super(Sheet, self).__init__(element)

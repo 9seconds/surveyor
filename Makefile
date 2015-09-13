@@ -22,4 +22,6 @@ clean:
 	rm -rf $(ROOT_DIR)/build && \
 	rm -rf $(ROOT_DIR)/dist && \
 	rm -rf $(ROOT_DIR)/*.egg-info && \
-	rm -f $(ROOT_DIR)/.coverage
+	rm -f $(ROOT_DIR)/.coverage && \
+	find . -name "*.py[co]" -type f -delete && \
+	find . -name "__pycache__" -type d -delete
