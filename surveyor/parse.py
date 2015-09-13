@@ -26,6 +26,7 @@ def parse_filename(filename):
 
 def parse_fileobj(content):
     if isinstance(content, six.string_types):
+        # noinspection PyCallingNonCallable
         content = six.StringIO(content)
 
     root = etree.parse(content)
