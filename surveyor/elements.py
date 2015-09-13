@@ -137,7 +137,7 @@ class Sheet(BaseElement):
             for col in range(1, sheet.max_column + 1):
                 value = sheet.cell(row=row, column=col).value
                 if value:
-                    if not isinstance(value, basestring):
+                    if not isinstance(value, six.string_types):
                         value = str(value)
                     # Skip formulas
                     if value.startswith("="):
