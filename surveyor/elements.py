@@ -5,7 +5,6 @@ from __future__ import unicode_literals, absolute_import
 
 import abc
 import collections
-import importlib
 
 import openpyxl
 import openpyxl.utils
@@ -79,7 +78,7 @@ class WorkBook(BaseElement):
         module_name = self.make_module_name(element)
 
         try:
-            self.class_module = importlib.import_module(module_name)
+            self.class_module = __import__(module_name)
         except Exception as exc:
             raise surveyor.exceptions.CannotImportClassError(module_name, exc)
 
