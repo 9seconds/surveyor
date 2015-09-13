@@ -84,4 +84,4 @@ def test_main(request, tmpdir, monkeypatch):
 
     assert surveyor.main() == os.EX_OK
     assert os.path.exists(output_path)
-    assert magic.from_file(output_path, mime=True) in XLSX_MIME_TYPES
+    assert magic.from_file(output_path, mime=True).decode("utf-8") in XLSX_MIME_TYPES
