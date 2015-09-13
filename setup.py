@@ -8,7 +8,7 @@ import setuptools.command.test
 import surveyor
 
 
-with open("README.md", "r") as resource:
+with open("README.rst", "r") as resource:
     LONG_DESCRIPTION = resource.read()
 
 
