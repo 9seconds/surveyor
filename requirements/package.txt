@@ -1,5 +1,5 @@
 # Package requirements for Surveyor
 
-openpyxl>=2.2,<2.3
 lxml
+openpyxl>=2.2,<2.3
 six

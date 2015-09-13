@@ -1,4 +1,4 @@
 # Misc requirements for Surveyor
 
-ipython
 ipdb
+ipython
