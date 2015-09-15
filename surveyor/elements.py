@@ -243,6 +243,7 @@ class Cell(BaseElement):
     TAG_NAME = "td"
 
     ATTR_CLASS = "class"
+    ATTR_NUMBER_FORMAT = "number_format"
 
     DEFAULT_STYLER = surveyor.classes.simple.Cell
 
@@ -251,10 +252,15 @@ class Cell(BaseElement):
 
         self.klass = element.attrib.get(self.ATTR_CLASS)
         self.value = surveyor.utils.guess_text(element.text)
+        # check openpyxl.styles.numbers
+        self.number_format = element.attrib.get(self.ATTR_NUMBER_FORMAT)
 
     def process(self, element=None, row_idx=1, col_idx=1):
         cell = element.cell(row=row_idx, column=col_idx)
         cell.value = self.value
+
+        if self.number_format is not None:
+            cell.number_format = self.number_format
 
         styler = self.get_class()(cell)
         styler.stylize()
