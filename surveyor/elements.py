@@ -48,9 +48,23 @@ class BaseElement(object):
         element.parent = self
         self.children.append(element)
 
+    def process(self, element=None, *args, **kwargs):
+        openpyxl_elements = self.collect(element, *args, **kwargs)
+
+        self.apply_inline_styles(openpyxl_elements)
+        self.stylize(openpyxl_elements)
+
+        return openpyxl_elements
+
     @abc.abstractmethod
-    def process(self, element=None):
-        raise NotImplementedError("You have to implement this method before invoke it.")
+    def collect(self, element, *args, **kwargs):
+        raise NotImplementedError("You have to define this method to invoke")
+
+    def apply_inline_styles(self, elements):
+        return elements
+
+    def stylize(self, elements):
+        return elements
 
     def get_class(self):
         if self.klass is None:
@@ -91,7 +105,7 @@ class WorkBook(BaseElement):
         if not element.name:
             element.name = "Sheet{0}".format(len(self.children))
 
-    def process(self, element=None):
+    def collect(self, element, *args, **kwargs):
         book = openpyxl.Workbook(encoding="utf-8", guess_types=True)
         book.worksheets = []
 
@@ -150,15 +164,21 @@ class Sheet(BaseElement):
         self.klass = element.attrib.get(self.ATTR_CLASS)
         self.name = element.attrib.get(self.ATTR_NAME)
 
-    def process(self, element=None):
+    def collect(self, element, *args, **kwargs):
         for table in self.children:
             table.process(element)
 
+        return element
+
+    def apply_inline_styles(self, element):
         if self.autosize:
             self.apply_autosize(element)
 
+    def stylize(self, element):
         styler = self.get_class()(element)
         styler.stylize()
+
+        return element
 
 
 class Table(BaseElement):
@@ -196,14 +216,21 @@ class Table(BaseElement):
         else:
             self.start_cell = self.DEFAULT_START_CELL
 
-    def process(self, element=None):
+    def collect(self, element, *args, **kwargs):
         top_row, bottom_row, left_column, right_column = self.get_dimensions()
 
         for row, row_idx in zip(self.children, range(top_row, bottom_row)):
             row.process(element, row_idx, left_column, right_column)
 
+        return element
+
+    def stylize(self, element):
+        top_row, bottom_row, left_column, right_column = self.get_dimensions()
         styler = self.get_class()(element, top_row, bottom_row, left_column, right_column)
+
         styler.stylize()
+
+        return element
 
     def get_dimensions(self):
         left_column, top_row = openpyxl.utils.coordinate_from_string(self.start_cell)
@@ -228,14 +255,20 @@ class Row(BaseElement):
 
         self.klass = element.attrib.get(self.ATTR_CLASS)
 
-    def process(self, element=None, row_idx=1, left_column=1, right_column=1):
+    def collect(self, element, row_idx=1, left_column=1, right_column=1):
         cells = []
+
         for col_idx, cell in enumerate(self.children, start=left_column):
             cell.process(element, row_idx, col_idx)
             cells.append(cells)
 
+        return cells
+
+    def stylize(self, cells):
         styler = self.get_class()(cells)
         styler.stylize()
+
+        return cells
 
 
 class Cell(BaseElement):
@@ -255,12 +288,20 @@ class Cell(BaseElement):
         # check openpyxl.styles.numbers
         self.number_format = element.attrib.get(self.ATTR_NUMBER_FORMAT)
 
-    def process(self, element=None, row_idx=1, col_idx=1):
+    def collect(self, element, row_idx=1, col_idx=1):
         cell = element.cell(row=row_idx, column=col_idx)
         cell.value = self.value
 
+        return cell
+
+    def apply_inline_styles(self, cell):
         if self.number_format is not None:
             cell.number_format = self.number_format
 
+        return cell
+
+    def stylize(self, cell):
         styler = self.get_class()(cell)
         styler.stylize()
+
+        return cell
