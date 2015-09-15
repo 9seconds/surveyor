@@ -9,6 +9,7 @@ import surveyor.exceptions as exceptions
 import surveyor.parse as parse
 
 
+# noinspection PyUnresolvedReferences
 def test_incorrect_root():
     xml = """
     <root></root>
@@ -18,6 +19,7 @@ def test_incorrect_root():
         parse.parse_fileobj(xml)
 
 
+# noinspection PyUnresolvedReferences
 def test_workbook_no_classes():
     xml = """
     <workbook classes="asiodfsdfhdjflksghdlfkg.dfghsdkjfghdskfgds.gdfg" />
@@ -92,6 +94,7 @@ def test_sheet_autosize_setting_default():
     assert not workbook.children[0].autosize
 
 
+# noinspection PyUnresolvedReferences
 @pytest.mark.parametrize("value", (
     "y",
     "yes",
@@ -111,6 +114,7 @@ def test_sheet_autosize_setting_true(value):
     assert workbook.children[0].autosize
 
 
+# noinspection PyUnresolvedReferences
 @pytest.mark.parametrize("value", (
     "n",
     "no",
@@ -197,6 +201,7 @@ def test_table_default_start_cell():
     assert workbook.children[0].children[0].start_cell == "A1"
 
 
+# noinspection PyUnresolvedReferences
 @pytest.mark.parametrize("column", (
     "C",
     3
@@ -249,6 +254,7 @@ def test_cell_class():
     assert workbook.children[0].children[0].children[0].children[0].klass == "Classname"
 
 
+# noinspection PyUnresolvedReferences
 @pytest.mark.parametrize("text, result", (
     ("1", 1),
     ("-1", -1),

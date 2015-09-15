@@ -76,6 +76,7 @@ def test_main(request, tmpdir, monkeypatch):
 
     template_path = tmpdir.join("template.xml").strpath
     with open(template_path, "wt") as res:
+        # noinspection PyTypeChecker
         res.write(xml)
 
     output_path = tmpdir.join("output.xlsx").strpath

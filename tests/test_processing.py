@@ -104,6 +104,7 @@ def test_fill_table():
     assert workbook.worksheets[1].cell(row=3, column=2).value == 444.0
 
 
+# noinspection PyUnresolvedReferences
 @pytest.mark.parametrize("number_format", (
     "0",
     "0.00",
