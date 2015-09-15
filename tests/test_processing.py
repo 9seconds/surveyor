@@ -3,6 +3,8 @@
 
 from __future__ import unicode_literals
 
+import pytest
+
 import surveyor.parse as parse
 
 
@@ -100,3 +102,28 @@ def test_fill_table():
     assert workbook.worksheets[1].cell(row=2, column=2).value == "222text"
     assert workbook.worksheets[1].cell(row=3, column=1).value == 333
     assert workbook.worksheets[1].cell(row=3, column=2).value == 444.0
+
+
+@pytest.mark.parametrize("number_format", (
+    "0",
+    "0.00",
+    "#,##0",
+    "#,##0.00"
+))
+def test_check_inline_number_format(number_format):
+    xml = """
+    <workbook>
+        <sheet>
+            <table>
+                <tr>
+                    <td number_format="{0}">1</td>
+                </tr>
+            </table>
+        </sheet>
+    </workbook>
+    """.format(number_format).strip()
+
+    workbook = parse.parse_fileobj(xml)
+    workbook = workbook.process()
+
+    assert workbook.worksheets[0].cell(row=1, column=1).number_format == number_format
