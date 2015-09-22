@@ -128,3 +128,28 @@ def test_check_inline_number_format(number_format):
     workbook = workbook.process()
 
     assert workbook.worksheets[0].cell(row=1, column=1).number_format == number_format
+
+
+# noinspection PyUnresolvedReferences
+@pytest.mark.parametrize("hyperlink", (
+    "http:",
+    "aaa",
+    "http://google.com",
+))
+def test_hyperlink(hyperlink):
+    xml = """
+    <workbook>
+        <sheet>
+            <table>
+                <tr>
+                    <td hyperlink="{0}">1</td>
+                </tr>
+            </table>
+        </sheet>
+    </workbook>
+    """.format(hyperlink).strip()
+
+    workbook = parse.parse_fileobj(xml)
+    workbook = workbook.process()
+
+    assert workbook.worksheets[0].cell(row=1, column=1).hyperlink == hyperlink

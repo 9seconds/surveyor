@@ -277,6 +277,7 @@ class Cell(BaseElement):
 
     ATTR_CLASS = "class"
     ATTR_NUMBER_FORMAT = "number_format"
+    ATTR_HYPERLINK = "hyperlink"
 
     DEFAULT_STYLER = surveyor.classes.simple.Cell
 
@@ -287,10 +288,13 @@ class Cell(BaseElement):
         self.value = surveyor.utils.guess_text(element.text)
         # check openpyxl.styles.numbers
         self.number_format = element.attrib.get(self.ATTR_NUMBER_FORMAT)
+        self.hyperlink = element.attrib.get(self.ATTR_HYPERLINK)
 
     def collect(self, element, row_idx=1, col_idx=1):
         cell = element.cell(row=row_idx, column=col_idx)
         cell.value = self.value
+        if self.hyperlink is not None:
+            cell.hyperlink = self.hyperlink
 
         return cell
 
