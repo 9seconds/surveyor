@@ -9,6 +9,7 @@ import sys
 
 import openpyxl
 import openpyxl.utils
+import openpyxl.comments
 import six
 
 import surveyor.classes.simple
@@ -278,6 +279,8 @@ class Cell(BaseElement):
     ATTR_CLASS = "class"
     ATTR_NUMBER_FORMAT = "number_format"
     ATTR_HYPERLINK = "hyperlink"
+    ATTR_COMMENT = "comment"
+    ATTR_COMMENT_AUTHOR = "comment-author"
 
     DEFAULT_STYLER = surveyor.classes.simple.Cell
 
@@ -290,11 +293,19 @@ class Cell(BaseElement):
         self.number_format = element.attrib.get(self.ATTR_NUMBER_FORMAT)
         self.hyperlink = element.attrib.get(self.ATTR_HYPERLINK)
 
+        comment_text = element.attrib.get(self.ATTR_COMMENT)
+        if comment_text:
+            self.comment = openpyxl.comments.Comment(comment_text, element.attrib.get(self.ATTR_COMMENT_AUTHOR))
+        else:
+            self.comment = None
+
     def collect(self, element, row_idx=1, col_idx=1):
         cell = element.cell(row=row_idx, column=col_idx)
         cell.value = self.value
         if self.hyperlink is not None:
             cell.hyperlink = self.hyperlink
+        if self.comment is not None:
+            cell.comment = self.comment
 
         return cell
 

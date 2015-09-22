@@ -153,3 +153,38 @@ def test_hyperlink(hyperlink):
     workbook = workbook.process()
 
     assert workbook.worksheets[0].cell(row=1, column=1).hyperlink == hyperlink
+
+
+# noinspection PyUnresolvedReferences
+@pytest.mark.parametrize("comment, author", (
+    ("", None),
+    ("comment", None),
+    ("comment", "author"),
+))
+def test_comment(comment, author):
+    attributes = "comment='{0}'".format(comment)
+    if author is not None:
+        attributes += " comment-author='{0}'".format(author)
+
+    xml = """
+    <workbook>
+        <sheet>
+            <table>
+                <tr>
+                    <td {0}>1</td>
+                </tr>
+            </table>
+        </sheet>
+    </workbook>
+    """.format(attributes).strip()
+
+    workbook = parse.parse_fileobj(xml)
+    workbook = workbook.process()
+
+    cell = workbook.worksheets[0].cell(row=1, column=1)
+    if not comment:
+        assert cell.comment is None
+    else:
+        assert cell.comment.text == comment
+        if author:
+            assert cell.comment.author == author
