@@ -10,6 +10,7 @@ import sys
 import openpyxl
 import openpyxl.utils
 import openpyxl.comments
+import openpyxl.styles
 import six
 
 import surveyor.classes.simple
@@ -272,15 +273,30 @@ class Row(BaseElement):
         return cells
 
 
+StyleInfo = collections.namedtuple("StyleInfo", ["attribute", "constructor"])
+
+
 class Cell(BaseElement):
 
     TAG_NAME = "td"
+
+    ATTR_SEPARATOR = "-"
 
     ATTR_CLASS = "class"
     ATTR_NUMBER_FORMAT = "number_format"
     ATTR_HYPERLINK = "hyperlink"
     ATTR_COMMENT = "comment"
-    ATTR_COMMENT_AUTHOR = "comment-author"
+    ATTR_COMMENT_AUTHOR = "comment{0}author".format(ATTR_SEPARATOR)
+
+    STYLE_ATTRIBUTES = {
+        "font": StyleInfo("font", openpyxl.styles.Font),
+        "pattern-fill": StyleInfo("fill", openpyxl.styles.PatternFill),
+        "gradient-fill": StyleInfo("fill", openpyxl.styles.GradientFill),
+        "alignment": StyleInfo("alignment", openpyxl.styles.Alignment),
+        "protection": StyleInfo("protection", openpyxl.styles.Protection),
+        # TODO border
+    }
+    STYLE_PREFIXES = tuple(STYLE_ATTRIBUTES.keys())
 
     DEFAULT_STYLER = surveyor.classes.simple.Cell
 
@@ -299,6 +315,13 @@ class Cell(BaseElement):
         else:
             self.comment = None
 
+        self.styles_by_prefix = collections.defaultdict(dict)
+        for attr, value in element.attrib.items():
+            if attr.startswith(self.STYLE_PREFIXES):
+                prefix, name = attr.rsplit(self.ATTR_SEPARATOR, 1)
+                self.styles_by_prefix[prefix][name] = value
+        # TODO check for multiple type of fills (maybe by the same StyleInfo.attribute)
+
     def collect(self, element, row_idx=1, col_idx=1):
         cell = element.cell(row=row_idx, column=col_idx)
         cell.value = self.value
@@ -313,6 +336,10 @@ class Cell(BaseElement):
         if self.number_format is not None:
             cell.number_format = self.number_format
 
+        for prefix, kwargs in self.styles_by_prefix.items():
+            style_info = self.STYLE_ATTRIBUTES[prefix]
+            style_object = style_info.constructor(**kwargs)
+            setattr(cell, style_info.attribute, style_object)
         return cell
 
     def stylize(self, cell):
