@@ -315,9 +315,9 @@ def test_protection_styles():
 def test_freeze_panes(row, column):
     freeze_attrs = ""
     if row:
-        freeze_attrs += " freeze-row='{}'".format(row)
+        freeze_attrs += " freeze-row='{0}'".format(row)
     if column:
-        freeze_attrs += " freeze-column='{}'".format(column)
+        freeze_attrs += " freeze-column='{0}'".format(column)
     xml = """
     <workbook>
         <sheet {0}>
@@ -336,7 +336,7 @@ def test_freeze_panes(row, column):
     sheet = workbook.worksheets[0]
     freeze_panes = sheet.freeze_panes
 
-    if (row is None and column is None) or (row < 2 and column < 2):
+    if row in (1, None) and column in (1, None):
         assert freeze_panes is None
     else:
         if row is None:
