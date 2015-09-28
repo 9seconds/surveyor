@@ -285,7 +285,23 @@ class Row(BaseElement):
         return cells
 
 
+# Inline style helpers for Cell element
 StyleInfo = collections.namedtuple("StyleInfo", ["attribute", "constructor"])
+
+
+def _border_constructor(**kwargs):
+    # border is a special case: border-top='thick, 0000ff' border-start='thin'
+    for name, value in kwargs.items():
+        args = [arg.strip() for arg in value.split(",")]
+        kwargs[name] = openpyxl.styles.Side(*args)
+
+    return openpyxl.styles.Border(**kwargs)
+
+
+def _gradient_fill_constructor(**kwargs):
+    if "stop" in kwargs:
+        kwargs["stop"] = [openpyxl.styles.Color(value.strip()) for value in kwargs["stop"].split(",")]
+    return openpyxl.styles.GradientFill(**kwargs)
 
 
 class Cell(BaseElement):
@@ -303,10 +319,10 @@ class Cell(BaseElement):
     STYLE_ATTRIBUTES = {
         "font": StyleInfo("font", openpyxl.styles.Font),
         "pattern-fill": StyleInfo("fill", openpyxl.styles.PatternFill),
-        "gradient-fill": StyleInfo("fill", openpyxl.styles.GradientFill),
+        "gradient-fill": StyleInfo("fill", _gradient_fill_constructor),
         "alignment": StyleInfo("alignment", openpyxl.styles.Alignment),
         "protection": StyleInfo("protection", openpyxl.styles.Protection),
-        # TODO border
+        "border": StyleInfo("border", _border_constructor),
     }
     STYLE_PREFIXES = tuple(STYLE_ATTRIBUTES.keys())
 
