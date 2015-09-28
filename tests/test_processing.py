@@ -295,3 +295,48 @@ def test_protection_styles():
     cell = workbook.worksheets[0].cell(row=1, column=1)
     assert not cell.protection.locked
     assert cell.protection.hidden
+
+
+# noinspection PyUnresolvedReferences
+@pytest.mark.parametrize("row, column", (
+    (None, None),
+    (1, None),
+    (2, None),
+    (None, 1),
+    (None, 2),
+    (2, 1),
+    (2, 2),
+    (1, 2),
+))
+def test_freeze_panes(row, column):
+    freeze_attrs = ""
+    if row:
+        freeze_attrs += " freeze-row='{}'".format(row)
+    if column:
+        freeze_attrs += " freeze-column='{}'".format(column)
+    xml = """
+    <workbook>
+        <sheet {0}>
+            <table>
+                <tr>
+                    <td>1</td>
+                </tr>
+            </table>
+        </sheet>
+    </workbook>
+    """.format(freeze_attrs)
+
+    workbook = parse.parse_fileobj(xml)
+    workbook = workbook.process()
+
+    sheet = workbook.worksheets[0]
+    freeze_panes = sheet.freeze_panes
+
+    if (row is None and column is None) or (row < 2 and column < 2):
+        assert freeze_panes is None
+    else:
+        if row is None:
+            row = 1
+        if column is None:
+            column = 1
+        assert freeze_panes == sheet.cell(row=row, column=column).coordinate

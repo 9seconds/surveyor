@@ -128,6 +128,8 @@ class Sheet(BaseElement):
     ATTR_AUTOSIZE = "autosize"
     ATTR_NAME = "name"
     ATTR_CLASS = "class"
+    ATTR_FREEZE_ROW = "freeze-row"
+    ATTR_FREEZE_COLUMN = "freeze-column"
 
     DEFAULT_WIDTH = 10
     WIDTH_ADDITION = 1
@@ -165,6 +167,8 @@ class Sheet(BaseElement):
         self.autosize = surveyor.utils.strtobool(element.attrib.get(self.ATTR_AUTOSIZE))
         self.klass = element.attrib.get(self.ATTR_CLASS)
         self.name = element.attrib.get(self.ATTR_NAME)
+        self.freeze_row = element.attrib.get(self.ATTR_FREEZE_ROW)
+        self.freeze_col = element.attrib.get(self.ATTR_FREEZE_COLUMN)
 
     def collect(self, element, *args, **kwargs):
         for table in self.children:
@@ -175,6 +179,14 @@ class Sheet(BaseElement):
     def apply_inline_styles(self, element):
         if self.autosize:
             self.apply_autosize(element)
+
+        freeze_row, freeze_col = self.freeze_row, self.freeze_col
+        if freeze_row is not None or freeze_col is not None:
+            if not freeze_col:
+                freeze_col = 1
+            if not freeze_row:
+                freeze_row = 1
+            element.freeze_panes = element.cell(row=int(freeze_row), column=int(freeze_col))
 
     def stylize(self, element):
         styler = self.get_class()(element)
