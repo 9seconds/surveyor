@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workbook classes="surveyor.classes.simple">
-    <sheet autosize="true" name="Worksheet1">
-        <table startrow="1" startcolumn="1" >
+    <sheet autosize="true" name="Worksheet1" freeze-row="2" freeze-column="2">
+        <table>
             <tr>
-                <td>Name</td>
-                <td colspan="2">VMType price</td>
-                <td colspan="2">VMType margin</td>
+                <td font-color="f84525">Color</td>
+                <td pattern-fill-patternType="lightGray">Fill</td>
+                <td>Simple</td>
             </tr>
-            <tr rowspan="2">
-                <td>10</td>
-                <td>20</td>
-                <td>30</td>
-            </tr>
-        </table>
-        <table startcell="C10">
             <tr>
-                <td>Name</td>
-                <td colspan="2">VMType price</td>
-                <td colspan="2">VMType margin</td>
+                <td number_format="#,##0.00">155550.015</td>
+                <td font-bold="true" alignment-horizontal="center">20</td>
+                <td font-italic="true" font-sz="13">30</td>
             </tr>
-            <tr rowspan="2">
-                <td>10</td>
-                <td>20</td>
-                <td>30</td>
-            </tr>
-            <tr rowspan="2">
+            <tr>
                 <td>40</td>
                 <td>50</td>
                 <td>60</td>
             </tr>
-            <tr rowspan="2">
+            <tr>
                 <td>70</td>
                 <td>80</td>
                 <td>90</td>
             </tr>
-            <tr rowspan="2">
+            <tr>
                 <td>100</td>
                 <td>110</td>
                 <td>120.23001</td>
+            </tr>
+        </table>
+        <table startcell="D7">
+            <tr>
+                <td>Table</td>
+                <td>With another</td>
+                <td colspan="2">Start position</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>20</td>
+                <td>30</td>
             </tr>
         </table>
     </sheet>
