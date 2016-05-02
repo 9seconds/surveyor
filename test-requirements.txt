@@ -1,0 +1,12 @@
+flake8
+flake8-debugger
+flake8-coding
+hacking
+pep8
+pep8-naming
+radon
+xenon
+mock
+pytest
+pytest-cov
+python-magic
