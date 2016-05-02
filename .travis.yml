@@ -11,10 +11,14 @@ env:
   - TOXENV=py33-test
   - TOXENV=py34-test
   - TOXENV=py35-test
-  - TOXENV=pypy-test
+  # - TOXENV=pypy-test
 
 install: pip install tox
 script: tox
+
+matrix:
+  allow_failures:
+    env: TOXENV=pypy-test
 
 notifications:
   email:
