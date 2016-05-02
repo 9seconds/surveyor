@@ -240,7 +240,8 @@ def test_gradient_fill_styles():
         <sheet>
             <table>
                 <tr>
-                    <td gradient-fill-degree="10" gradient-fill-left="5">1</td>
+                    <td gradient-fill-degree="10" gradient-fill-left="5"
+                        gradient-fill-stop="00ff00, ff0000">1</td>
                 </tr>
             </table>
         </sheet>
@@ -253,6 +254,9 @@ def test_gradient_fill_styles():
     cell = workbook.worksheets[0].cell(row=1, column=1)
     assert cell.fill.degree == 10
     assert cell.fill.left == 5
+    assert len(cell.fill.stop) == 2
+    assert cell.fill.stop[0] == openpyxl.styles.Color("00ff00")
+    assert cell.fill.stop[1] == openpyxl.styles.Color("ff0000")
 
 
 def test_alignment_styles():
@@ -295,3 +299,80 @@ def test_protection_styles():
     cell = workbook.worksheets[0].cell(row=1, column=1)
     assert not cell.protection.locked
     assert cell.protection.hidden
+
+
+# noinspection PyUnresolvedReferences
+@pytest.mark.parametrize("row, column", (
+    (None, None),
+    (1, None),
+    (2, None),
+    (None, 1),
+    (None, 2),
+    (2, 1),
+    (2, 2),
+    (1, 2),
+))
+def test_freeze_panes(row, column):
+    freeze_attrs = ""
+    if row:
+        freeze_attrs += " freeze-row='{0}'".format(row)
+    if column:
+        freeze_attrs += " freeze-column='{0}'".format(column)
+    xml = """
+    <workbook>
+        <sheet {0}>
+            <table>
+                <tr>
+                    <td>1</td>
+                </tr>
+            </table>
+        </sheet>
+    </workbook>
+    """.format(freeze_attrs)
+
+    workbook = parse.parse_fileobj(xml)
+    workbook = workbook.process()
+
+    sheet = workbook.worksheets[0]
+    freeze_panes = sheet.freeze_panes
+
+    if row in (1, None) and column in (1, None):
+        assert freeze_panes is None
+    else:
+        if row is None:
+            row = 1
+        if column is None:
+            column = 1
+        assert freeze_panes == sheet.cell(row=row, column=column).coordinate
+
+
+# noinspection PyUnresolvedReferences
+@pytest.mark.parametrize("border, text, style, color", (
+    ("top", "thick", "thick", None),
+    ("top", "thick, ff0000", "thick", "ff0000"),
+    ("bottom", "thin,      00ff00", "thin", "00ff00"),
+))
+def test_border(border, text, style, color):
+
+    xml = """
+    <workbook>
+        <sheet>
+            <table>
+                <tr>
+                    <td border-{0}="{1}">1</td>
+                </tr>
+            </table>
+        </sheet>
+    </workbook>
+    """.format(border, text)
+
+    workbook = parse.parse_fileobj(xml)
+    workbook = workbook.process()
+
+    cell = workbook.worksheets[0].cell(row=1, column=1)
+    cell_border = getattr(cell.border, border)
+    assert cell_border.style == style
+    if color is None:
+        assert cell_border.color is None
+    else:
+        assert cell_border.color == openpyxl.styles.Color(color)
