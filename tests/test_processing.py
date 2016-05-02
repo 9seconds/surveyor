@@ -3,8 +3,8 @@
 
 from __future__ import unicode_literals
 
-import pytest
 import openpyxl.styles
+import pytest
 
 import surveyor.parse as parse
 

@@ -3,9 +3,9 @@
 
 from __future__ import unicode_literals
 
+import optparse
 import os
 import os.path
-import optparse
 
 import surveyor.parse
 

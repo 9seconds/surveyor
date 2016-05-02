@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import unicode_literals, absolute_import
+from __future__ import absolute_import
+from __future__ import unicode_literals
 
 import abc
 import collections
 import sys
 
 import openpyxl
-import openpyxl.utils
 import openpyxl.comments
 import openpyxl.styles
+import openpyxl.utils
 import six
 
 import surveyor.classes.simple
@@ -18,7 +19,8 @@ import surveyor.exceptions
 import surveyor.utils
 
 # noinspection PyUnresolvedReferences
-from six.moves import range, zip
+from six.moves import range
+from six.moves import zip
 
 
 DEFAULT_CLASSES_MODULE = "surveyor.classes.simple"
@@ -348,7 +350,7 @@ class Cell(BaseElement):
             if attr.startswith(self.STYLE_PREFIXES):
                 prefix, name = attr.rsplit(self.ATTR_SEPARATOR, 1)
                 self.styles_by_prefix[prefix][name] = value
-        # TODO check for multiple type of fills (maybe by the same StyleInfo.attribute)
+        # TODO(9seconds) check for multiple type of fills (maybe by the same StyleInfo.attribute)
 
     def collect(self, element, row_idx=1, col_idx=1):
         cell = element.cell(row=row_idx, column=col_idx)
